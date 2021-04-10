@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { Component, SyntheticEvent } from "react";
+import { Redirect } from "react-router";
 import "../Login.css";
 import { register } from "../routes/url";
 
@@ -10,6 +11,9 @@ export default class Register extends Component {
   password = "";
   password_confirm = "";
   data!: Object;
+  state = {
+    redirect: false,
+  };
 
   submit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -24,9 +28,16 @@ export default class Register extends Component {
     const res = await axios.post(register, this.data);
 
     console.log(res.data);
+    this.setState({
+      redirect: true,
+    });
   };
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={"/login"} />;
+    }
+
     return (
       <main className="form-signin">
         <form onSubmit={this.submit}>
