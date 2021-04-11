@@ -35,7 +35,7 @@ const Login = () => {
       email,
       password,
     };
-    const { data } = await axios.post(login, req, { withCredentials: true });
+    const { data } = await axios.post(login, req);
     setRedirect(true);
   };
 
