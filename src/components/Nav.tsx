@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Nav = () => {
   const [user, setUser] = useState({
@@ -9,12 +10,20 @@ const Nav = () => {
   });
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get("user");
+      try {
+        const { data } = await axios.get("user");
 
-      setUser(data);
+        setUser(data);
+      } catch (error) {
+        console.log(error);
+      }
     })();
     return () => {};
   }, []);
+
+  const logOut = async () => {
+    await axios.post("logout", {});
+  };
 
   return (
     <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
@@ -23,12 +32,21 @@ const Nav = () => {
       </a>
 
       <ul className="my-2 my-md-0 mr-md-3">
-        <a className="p-2 text-white text-decoration-none" href="#">
+        <Link
+          to="/profile"
+          className="p-2 text-white text-decoration-none"
+          href="#"
+        >
           {user?.first_name} {user?.last_name}
-        </a>
-        <a className="p-2 text-white text-decoration-none" href="#">
+        </Link>
+        <Link
+          to="/login"
+          className="p-2 text-white text-decoration-none"
+          href="#"
+          onClick={logOut}
+        >
           Sign out
-        </a>
+        </Link>
       </ul>
     </nav>
   );

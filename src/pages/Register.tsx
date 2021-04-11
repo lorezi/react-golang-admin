@@ -16,21 +16,25 @@ export default class Register extends Component {
   };
 
   submit = async (e: SyntheticEvent) => {
-    e.preventDefault();
-    this.data = {
-      first_name: this.first_name,
-      last_name: this.last_name,
-      email: this.email,
-      password: this.password,
-      password_confirm: this.password_confirm,
-    };
+    try {
+      e.preventDefault();
+      this.data = {
+        first_name: this.first_name,
+        last_name: this.last_name,
+        email: this.email,
+        password: this.password,
+        password_confirm: this.password_confirm,
+      };
 
-    const res = await axios.post(register, this.data);
+      const res = await axios.post(register, this.data);
 
-    console.log(res.data);
-    this.setState({
-      redirect: true,
-    });
+      console.log(res.data);
+      this.setState({
+        redirect: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   render() {

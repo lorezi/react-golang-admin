@@ -30,13 +30,17 @@ const Login = () => {
   const [redirect, setRedirect] = useState(false);
 
   const submit = async (e: SyntheticEvent) => {
-    e.preventDefault();
-    const req = {
-      email,
-      password,
-    };
-    const { data } = await axios.post(login, req);
-    setRedirect(true);
+    try {
+      e.preventDefault();
+      const req = {
+        email,
+        password,
+      };
+      const { data } = await axios.post(login, req);
+      setRedirect(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (redirect) {
