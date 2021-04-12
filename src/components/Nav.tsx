@@ -2,18 +2,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { User } from "../models/User";
 
 const Nav = () => {
-  const [user, setUser] = useState({
-    first_name: "",
-    last_name: "",
-  });
+  const [user, setUser] = useState(new User());
   useEffect(() => {
     (async () => {
       try {
         const { data } = await axios.get("user");
 
-        setUser(data);
+        setUser(new User(data.id, data.first_name, data.last_name, data.email));
       } catch (error) {
         console.log(error);
       }
@@ -37,7 +35,7 @@ const Nav = () => {
           className="p-2 text-white text-decoration-none"
           href="#"
         >
-          {user?.first_name} {user?.last_name}
+          {user.name}
         </Link>
         <Link
           to="/login"
