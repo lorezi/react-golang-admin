@@ -28,7 +28,7 @@ const UserEdit = (props: any) => {
       setRole_id(data.role.id);
     })();
     return () => {};
-  }, []);
+  }, [id]);
 
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault();
