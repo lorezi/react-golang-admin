@@ -69,6 +69,12 @@ const Users = () => {
                   <td>{user.role.name}</td>
                   <td>
                     <div className="btn-group mr-2">
+                      <Link
+                        to={`users/${user.id}/edit`}
+                        className="btn btn-sm btn-success"
+                      >
+                        Edit
+                      </Link>
                       <a
                         href="#"
                         className="btn btn-sm btn-danger"
