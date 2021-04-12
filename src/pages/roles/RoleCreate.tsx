@@ -34,7 +34,7 @@ const RoleCreate = () => {
       name,
       permissions: selected.map(String),
     };
-    // console.log(data);
+
     await axios.post("roles", data);
     setRedirect(true);
   };
