@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Paginator from "../../components/Paginator";
 import Wrapper from "../../components/Wrapper";
 import { User } from "../../models/User";
 
@@ -18,18 +19,6 @@ const Users = () => {
     })();
     return () => {};
   }, [page]);
-
-  const next = () => {
-    if (page < lastPage) {
-      setPage(page + 1);
-    }
-  };
-
-  const prev = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  };
 
   // TODO notification panel
   const del = async (id: number) => {
@@ -91,21 +80,7 @@ const Users = () => {
         </table>
       </div>
 
-      <nav aria-label="Page navigation example">
-        <ul className="pagination">
-          <li className="page-item">
-            <a className="page-link" href="#" onClick={prev}>
-              Previous
-            </a>
-          </li>
-
-          <li className="page-item">
-            <a className="page-link" href="#" onClick={next}>
-              Next
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <Paginator page={page} lastPage={lastPage} pageChanged={setPage} />
     </Wrapper>
   );
 };
