@@ -7,10 +7,20 @@ import Wrapper from "../../components/Wrapper";
 import { Order } from "../../models/Order";
 import { OrderItem } from "../../models/OrderItem";
 
+const hide = {
+  maxHeight: 0,
+  transition: "1000ms ease-in",
+};
+const show = {
+  maxHeight: "150px",
+  transition: "500ms ease-out",
+};
+
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
+  const [selected, setSelected] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -22,10 +32,29 @@ const Orders = () => {
     return () => {};
   }, [page]);
 
+  const select = (id: number) => {
+    setSelected(selected === id ? 0 : id);
+  };
+
+  const exportFile = async () => {
+    const { data } = await axios.post("export", {}, { responseType: "blob" });
+    const blob = new Blob([data], { type: "text/csv" });
+    const url = window.URL.createObjectURL(data);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "orders.csv";
+    link.click();
+  };
+
   return (
     <Wrapper>
+      <div className="pt-3 pb-2 mb-3 border-bottom">
+        <a href="#" className="btn btn-sm btn-primary" onClick={exportFile}>
+          Export
+        </a>
+      </div>
       <div className="table-responsive">
-        <table className="table table-striped table-sm">
+        <table className="table  table-sm">
           <thead>
             <tr>
               <th>#</th>
@@ -45,7 +74,11 @@ const Orders = () => {
                     <td>{order.email}</td>
                     <td>{order.total}</td>
                     <td>
-                      <a href="#" className="btn btn-sm btn-info">
+                      <a
+                        href="#"
+                        className="btn btn-sm btn-info"
+                        onClick={() => select(order.id)}
+                      >
                         View
                       </a>
                     </td>
@@ -53,7 +86,10 @@ const Orders = () => {
 
                   <tr>
                     <td colSpan={5}>
-                      <div>
+                      <div
+                        className="overflow-hidden"
+                        style={selected === order.id ? show : hide}
+                      >
                         <table className="table table-sm">
                           <thead>
                             <tr>
