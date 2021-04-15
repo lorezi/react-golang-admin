@@ -1,32 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { User } from "../models/User";
 
-const Nav = () => {
-  const [user, setUser] = useState(new User());
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await axios.get("user");
-
-        setUser(
-          new User(
-            data.id,
-            data.first_name,
-            data.last_name,
-            data.email,
-            data.role
-          )
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-    return () => {};
-  }, []);
-
+const Nav = (props: { user: User }) => {
   const logOut = async () => {
     await axios.post("logout", {});
   };
@@ -43,7 +22,7 @@ const Nav = () => {
           className="p-2 text-white text-decoration-none"
           href="#"
         >
-          {user.name}
+          {props.user.name}
         </Link>
         <Link
           to="/login"
@@ -58,4 +37,6 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+const mapStateToProps = (state: { user: User }) => ({ user: state.user });
+
+export default connect(mapStateToProps)(Nav);

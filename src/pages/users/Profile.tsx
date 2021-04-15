@@ -1,9 +1,12 @@
 import axios from "axios";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, { Dispatch, SyntheticEvent, useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Wrapper from "../../components/Wrapper";
+import { User } from "../../models/User";
+import { setUser } from "../../redux/action/setUserAction";
 
-const Profile = () => {
+const Profile = (props: { user: User; setUser: (user: User) => void }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -11,24 +14,25 @@ const Profile = () => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
   useEffect(() => {
-    (async () => {
-      const { data } = await axios.get("user");
-      setFirstName(data.first_name);
-      setLastName(data.last_name);
-      setEmail(data.email);
-    })();
+    setFirstName(props.user.first_name);
+    setLastName(props.user.last_name);
+    setEmail(props.user.email);
+
     return () => {};
-  }, []);
+  }, [props.user]);
 
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const data = {
+    const req = {
       first_name: firstName,
       last_name: lastName,
       email,
     };
 
-    await axios.patch("users/profile", data);
+    const { data } = await axios.patch("users/profile", req);
+    props.setUser(
+      new User(data.id, data.first_name, data.last_name, data.email, data.role)
+    );
   };
 
   const passwordSubmit = async (e: SyntheticEvent) => {
@@ -101,4 +105,10 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  setUser: (user: User) => dispatch(setUser(user)),
+});
+
+const mapStateToProps = (state: { user: User }) => ({ user: state.user });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
